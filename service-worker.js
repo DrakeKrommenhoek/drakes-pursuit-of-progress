@@ -1,7 +1,7 @@
 // Service Worker for Drake's Pursuit of Progress
 // Enables offline functionality and caching
 
-const CACHE_NAME = 'progress-tracker-v1';
+const CACHE_NAME = 'progress-tracker-v2';
 const urlsToCache = [
   './',
   './index.html',

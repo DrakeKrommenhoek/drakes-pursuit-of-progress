@@ -202,22 +202,59 @@ class MomentumTracker {
     // ========== DATE UTILITIES ==========
 
     getTodayString() {
-        return new Date().toISOString().split('T')[0];
+        const now = new Date();
+        const resetHour = parseInt(this.settings.dailyResetTime.split(':')[0]); // Default: 3
+
+        // If it's before reset time, we're still in "yesterday"
+        if (now.getHours() < resetHour) {
+            now.setDate(now.getDate() - 1);
+        }
+
+        // Return local date (not UTC) in YYYY-MM-DD format
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
     }
 
     getDateString(daysOffset = 0) {
-        const date = new Date();
-        date.setDate(date.getDate() + daysOffset);
-        return date.toISOString().split('T')[0];
+        const now = new Date();
+        const resetHour = parseInt(this.settings.dailyResetTime.split(':')[0]); // Default: 3
+
+        // If it's before reset time, we're still in "yesterday"
+        if (now.getHours() < resetHour) {
+            now.setDate(now.getDate() - 1);
+        }
+
+        // Apply the offset
+        now.setDate(now.getDate() + daysOffset);
+
+        // Return local date (not UTC) in YYYY-MM-DD format
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
     }
 
     getCurrentWeekKey() {
-        const today = new Date();
-        const dayOfWeek = today.getDay();
+        const now = new Date();
+        const resetHour = parseInt(this.settings.dailyResetTime.split(':')[0]); // Default: 3
+
+        // If it's before reset time, we're still in "yesterday"
+        if (now.getHours() < resetHour) {
+            now.setDate(now.getDate() - 1);
+        }
+
+        const dayOfWeek = now.getDay();
         const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
-        const monday = new Date(today);
-        monday.setDate(today.getDate() + mondayOffset);
-        return monday.toISOString().split('T')[0]; // Use Monday's date as key
+        const monday = new Date(now);
+        monday.setDate(now.getDate() + mondayOffset);
+
+        // Return local date (not UTC) in YYYY-MM-DD format
+        const year = monday.getFullYear();
+        const month = String(monday.getMonth() + 1).padStart(2, '0');
+        const day = String(monday.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
     }
 
     // ========== RESET LOGIC ==========
